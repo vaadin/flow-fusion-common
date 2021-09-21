@@ -44,7 +44,7 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
+  "peerDependencies": {
     "lit": "^2.0.0"
   },
   "devDependencies": {
