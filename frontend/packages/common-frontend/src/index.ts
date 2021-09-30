@@ -6,5 +6,5 @@ $wnd.Vaadin = $wnd.Vaadin || {};
 $wnd.Vaadin.registrations = $wnd.Vaadin.registrations || [];
 $wnd.Vaadin.registrations.push({
   is: '@vaadin/common-frontend',
-  version: /* updated-by-script */ '0.0.12',
+  version: /* updated-by-script */ '0.0.16',
 });

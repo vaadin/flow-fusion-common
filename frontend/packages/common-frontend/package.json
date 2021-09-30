@@ -1,6 +1,6 @@
 {
   "name": "@vaadin/common-frontend",
-  "version": "0.0.12",
+  "version": "0.0.16",
   "description": "Vaadin frontend utils used by Flow and Fusion",
   "main": "index.js",
   "module": "index.js",
@@ -45,8 +45,10 @@
     "access": "public"
   },
   "dependencies": {
-    "lit": "^2.0.0-rc.2",
     "tslib": "^2.3.1"
+  },
+  "peerDependencies": {
+    "lit": "^2.0.0"
   },
   "devDependencies": {
     "@open-wc/testing": "^2.5.33",
