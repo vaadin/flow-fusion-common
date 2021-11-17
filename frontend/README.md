@@ -8,14 +8,13 @@ The collection of frontend utilities used by Vaadin Flow and Fusion.
 | Package                 | Status |
 |-------------------------|--------|
 | [@vaadin/common-frontend](./packages/common-frontend) | [![Latest Stable Version](https://img.shields.io/npm/v/@vaadin/common-frontend.svg)](https://www.npmjs.com/package/@vaadin/common-frontend) |
-| [@vaadin/fusion-frontend](./packages/fusion-frontend) | [![Latest Stable Version](https://img.shields.io/npm/v/@vaadin/fusion-frontend.svg)](https://www.npmjs.com/package/@vaadin/fusion-frontend) |
 
 ## Contribution
 
 You can download the project and run tests using the following commands:
 ```bash
-$ git clone https://github.com/vaadin/fusion.git
-$ cd fusion
+$ git clone https://github.com/vaadin/flow-fusion-common.git
+$ cd flow-fusion-common/frontend
 $ npm install
 $ npm run build
 $ npm test

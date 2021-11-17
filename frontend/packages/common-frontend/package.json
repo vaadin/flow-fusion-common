@@ -5,7 +5,11 @@
   "main": "index.js",
   "module": "index.js",
   "type": "module",
-  "repository": "https://github.com/vaadin/fusion/frontend/packages/common-frontend",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vaadin/flow-fusion-common.git",
+    "directory": "frontend/packages/common-frontend"
+  },
   "keywords": [
     "Vaadin",
     "Fusion"
