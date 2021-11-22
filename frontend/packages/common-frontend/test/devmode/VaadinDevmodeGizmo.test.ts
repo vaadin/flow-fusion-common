@@ -1,5 +1,6 @@
 import { assert } from '@open-wc/testing';
 
+import '../../src/devmode/VaadinDevmodeGizmo';
 import { VaadinDevmodeGizmo } from '../../src/devmode/VaadinDevmodeGizmo';
 
 describe('VaadinDevmodeGizmo', () => {

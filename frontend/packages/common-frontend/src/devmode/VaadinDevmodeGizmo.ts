@@ -1,7 +1,8 @@
 import { css, html, LitElement, nothing } from 'lit';
 import { property, query, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import copy from 'copy-to-clipboard';
+// @ts-ignore
+import { copy } from './copy-to-clipboard.js';
 import { Connection, ConnectionStatus } from './Connection';
 
 interface ServerInfo {
