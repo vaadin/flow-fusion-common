@@ -34,6 +34,12 @@
     },
     "./index.js": {
       "default": "./index.js"
+    },
+    "./devmode/VaadinDevmodeGizmo.js": {
+      "default": "./devmode/VaadinDevmodeGizmo.js"
+    },
+    "./devmode/Connection.js": {
+      "default": "./devmode/Connection.js"
     }
   },
   "author": "Vaadin Ltd",
@@ -49,6 +55,7 @@
     "access": "public"
   },
   "dependencies": {
+    "copy-to-clipboard": "^3.3.1",
     "tslib": "^2.3.1"
   },
   "peerDependencies": {
