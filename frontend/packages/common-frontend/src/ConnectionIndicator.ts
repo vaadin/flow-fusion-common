@@ -54,7 +54,7 @@ export class ConnectionIndicator extends LitElement {
    * The delay before showing the loading indicator, in ms.
    */
   @property({ type: Number })
-  firstDelay = 300;
+  firstDelay = 450;
 
   /**
    * The delay before the loading indicator goes into "second" state, in ms.
