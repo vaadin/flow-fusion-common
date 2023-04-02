@@ -35,7 +35,7 @@ describe('ConnectionIndicator', () => {
     it('should have default property values', () => {
       // Configuration
       assert.isTrue(connectionIndicator.applyDefaultTheme);
-      assert.equal(connectionIndicator.firstDelay, 300);
+      assert.equal(connectionIndicator.firstDelay, 450);
       assert.equal(connectionIndicator.secondDelay, 1500);
       assert.equal(connectionIndicator.thirdDelay, 5000);
       assert.equal(connectionIndicator.expandedDuration, 2000);
