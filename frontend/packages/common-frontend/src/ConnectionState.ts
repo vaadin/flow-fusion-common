@@ -124,8 +124,16 @@ export class ConnectionStateStore {
 
 const $wnd = window as any;
 if (!$wnd.Vaadin?.connectionState) {
+  let online;
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    // We do not know if we are online or not as we cannot trust navigator.onLine which checks availability of a network connection. Better to assume online so localhost apps can work
+    online = true;
+  } else {
+    online = navigator.onLine;
+  }
+
   $wnd.Vaadin = $wnd.Vaadin || {};
   $wnd.Vaadin.connectionState = new ConnectionStateStore(
-    navigator.onLine ? ConnectionState.CONNECTED : ConnectionState.CONNECTION_LOST
+    online ? ConnectionState.CONNECTED : ConnectionState.CONNECTION_LOST
   );
 }
