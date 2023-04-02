@@ -122,10 +122,24 @@ export class ConnectionStateStore {
   }
 }
 
+export const isLocalhost = (hostname: string) => {
+  if (hostname === 'localhost') {
+    return true;
+  }
+  if (hostname === '[::1]') {
+    return true;
+  }
+  if (hostname.match(/^127\.\d+\.\d+\.\d+$/)) {
+    return true;
+  }
+
+  return false;
+};
+
 const $wnd = window as any;
 if (!$wnd.Vaadin?.connectionState) {
   let online;
-  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+  if (isLocalhost(window.location.hostname)) {
     // We do not know if we are online or not as we cannot trust navigator.onLine which checks availability of a network connection. Better to assume online so localhost apps can work
     online = true;
   } else {
