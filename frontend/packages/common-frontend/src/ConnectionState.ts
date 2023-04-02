@@ -122,14 +122,14 @@ export class ConnectionStateStore {
   }
 }
 
-const isLocalhost = (hostname: string) => {
+export const isLocalhost = (hostname: string) => {
   if (hostname === 'localhost') {
     return true;
   }
   if (hostname === '[::1]') {
     return true;
   }
-  if (hostname.match(/^127\.0\.0\.\d+$/)) {
+  if (hostname.match(/^127\.\d+\.\d+\.\d+$/)) {
     return true;
   }
 

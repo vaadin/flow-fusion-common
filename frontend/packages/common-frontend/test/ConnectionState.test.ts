@@ -1,6 +1,6 @@
 import { assert, expect } from '@open-wc/testing';
 import sinon from 'sinon';
-import { ConnectionState, ConnectionStateStore } from '../src';
+import { ConnectionState, ConnectionStateStore, isLocalhost } from '../src';
 
 describe('ConnectionStateStore', () => {
   it('should call state change listeners when transitioning between states', () => {
@@ -157,4 +157,17 @@ describe('ConnectionStateStore', () => {
       navigatorStub.restore();
     }
   });
+  it('should know which hosts are localhost', async () => {
+    expect(isLocalhost("localhost")).to.be.true;
+    expect(isLocalhost("127.0.0.1")).to.be.true;
+    expect(isLocalhost("127.0.0.2")).to.be.true;
+    expect(isLocalhost("127.1.2.3")).to.be.true;
+    expect(isLocalhost("[::1]")).to.be.true;
+    expect(isLocalhost("::1")).to.be.false;
+    expect(isLocalhost("127.0.0.1.com")).to.be.false;
+    expect(isLocalhost("foo127.0.0.1")).to.be.false;
+    expect(isLocalhost("localhost.com")).to.be.false;
+    expect(isLocalhost("my.localhost")).to.be.false;
+  });
+
 });
