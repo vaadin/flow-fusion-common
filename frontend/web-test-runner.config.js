@@ -26,7 +26,11 @@ export default {
   testsFinishTimeout: 60000, // default 20000
   preserveSymlinks: true,
   plugins: [
-    esbuildPlugin({ ts: true, target: 'auto' }),
+    esbuildPlugin({
+      ts: true,
+      target: 'auto',
+      tsconfig: resolve(dir, 'tsconfig.json'),
+    }),
     {
       name: 'fix-node-resolve-issue',
       transformImport({ source }) {
