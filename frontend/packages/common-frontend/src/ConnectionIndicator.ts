@@ -17,7 +17,7 @@
 import { html, LitElement } from 'lit';
 import { property } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { ConnectionState, ConnectionStateStore } from './ConnectionState.js';
+import { ConnectionState, type ConnectionStateStore } from './ConnectionState.js';
 
 const DEFAULT_STYLE_ID = 'css-loading-indicator';
 
@@ -43,7 +43,7 @@ export class ConnectionIndicator extends LitElement {
   static create(): ConnectionIndicator {
     const $wnd = window as any;
     if (!$wnd.Vaadin?.connectionIndicator) {
-      $wnd.Vaadin = $wnd.Vaadin || {};
+      $wnd.Vaadin ||= {};
       $wnd.Vaadin.connectionIndicator = document.createElement('vaadin-connection-indicator');
       document.body.appendChild($wnd.Vaadin.connectionIndicator);
     }
@@ -135,12 +135,12 @@ export class ConnectionIndicator extends LitElement {
         () => {
           this.expanded = false;
         },
-        this.expandedDuration
+        this.expandedDuration,
       );
     };
   }
 
-  render() {
+  protected render() {
     return html`
       <div class="v-loading-indicator ${this.loadingBarState}" style=${this.getLoadingBarStyle()}></div>
 
@@ -154,7 +154,7 @@ export class ConnectionIndicator extends LitElement {
     `;
   }
 
-  connectedCallback() {
+  protected connectedCallback() {
     super.connectedCallback();
 
     const $wnd = window as any;
@@ -167,7 +167,7 @@ export class ConnectionIndicator extends LitElement {
     this.updateTheme();
   }
 
-  disconnectedCallback() {
+  protected disconnectedCallback() {
     super.disconnectedCallback();
 
     if (this.connectionStateStore) {
@@ -196,7 +196,7 @@ export class ConnectionIndicator extends LitElement {
   /**
    * Update state flags.
    *
-   * @return true if the connection message changes, and therefore a new
+   * @returns true if the connection message changes, and therefore a new
    * message should be shown
    */
   private updateConnectionState(): boolean {
@@ -229,7 +229,7 @@ export class ConnectionIndicator extends LitElement {
       () => {
         this.loadingBarState = LoadingBarState.FIRST;
       },
-      this.firstDelay
+      this.firstDelay,
     );
 
     this.secondTimeout = this.timeoutFor(
@@ -238,7 +238,7 @@ export class ConnectionIndicator extends LitElement {
       () => {
         this.loadingBarState = LoadingBarState.SECOND;
       },
-      this.secondDelay
+      this.secondDelay,
     );
 
     this.thirdTimeout = this.timeoutFor(
@@ -247,7 +247,7 @@ export class ConnectionIndicator extends LitElement {
       () => {
         this.loadingBarState = LoadingBarState.THIRD;
       },
-      this.thirdDelay
+      this.thirdDelay,
     );
   }
 

@@ -33,7 +33,7 @@ export type ConnectionStateChangeListener = (previous: ConnectionState, current:
 export class ConnectionStateStore {
   private connectionState: ConnectionState;
 
-  private stateChangeListeners: Set<ConnectionStateChangeListener> = new Set();
+  private readonly stateChangeListeners = new Set<ConnectionStateChangeListener>();
 
   private loadingCount = 0;
 
@@ -42,13 +42,16 @@ export class ConnectionStateStore {
 
     this.serviceWorkerMessageListener = this.serviceWorkerMessageListener.bind(this);
 
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (navigator.serviceWorker) {
       // Query service worker if the most recent fetch was served from cache
       // Add message listener for handling response
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       navigator.serviceWorker.addEventListener('message', this.serviceWorkerMessageListener);
       // Send JSON-RPC request to Vaadin service worker
-      navigator.serviceWorker.ready.then((registration) => {
-        registration?.active?.postMessage({
+      // eslint-disable-next-line no-void
+      void navigator.serviceWorker.ready.then((registration) => {
+        registration.active?.postMessage({
           method: 'Vaadin.ServiceWorker.isConnectionLost',
           id: 'Vaadin.ServiceWorker.isConnectionLost',
         });
@@ -117,6 +120,7 @@ export class ConnectionStateStore {
       }
 
       // Cleanup: remove event listener upon receiving response
+      // eslint-disable-next-line @typescript-eslint/unbound-method
       navigator.serviceWorker.removeEventListener('message', this.serviceWorkerMessageListener);
     }
   }
@@ -129,7 +133,7 @@ export const isLocalhost = (hostname: string) => {
   if (hostname === '[::1]') {
     return true;
   }
-  if (hostname.match(/^127\.\d+\.\d+\.\d+$/)) {
+  if (/^127\.\d+\.\d+\.\d+$/u.exec(hostname)) {
     return true;
   }
 
@@ -146,8 +150,8 @@ if (!$wnd.Vaadin?.connectionState) {
     online = navigator.onLine;
   }
 
-  $wnd.Vaadin = $wnd.Vaadin || {};
+  $wnd.Vaadin ||= {};
   $wnd.Vaadin.connectionState = new ConnectionStateStore(
-    online ? ConnectionState.CONNECTED : ConnectionState.CONNECTION_LOST
+    online ? ConnectionState.CONNECTED : ConnectionState.CONNECTION_LOST,
   );
 }

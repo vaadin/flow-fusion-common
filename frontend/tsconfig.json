@@ -15,5 +15,5 @@
     "verbatimModuleSyntax": true,
     "useUnknownInCatchVariables": true
   },
-  "include": ["packages/**"]
+  "include": ["packages/*/src"]
 }
