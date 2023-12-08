@@ -154,7 +154,7 @@ export class ConnectionIndicator extends LitElement {
     `;
   }
 
-  protected connectedCallback() {
+  connectedCallback() {
     super.connectedCallback();
 
     const $wnd = window as any;
@@ -167,7 +167,7 @@ export class ConnectionIndicator extends LitElement {
     this.updateTheme();
   }
 
-  protected disconnectedCallback() {
+  disconnectedCallback() {
     super.disconnectedCallback();
 
     if (this.connectionStateStore) {
