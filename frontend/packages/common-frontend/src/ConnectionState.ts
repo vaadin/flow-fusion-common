@@ -133,7 +133,7 @@ export const isLocalhost = (hostname: string) => {
   if (hostname === '[::1]') {
     return true;
   }
-  if (/^127\.\d+\.\d+\.\d+$/u.exec(hostname)) {
+  if (/^127\.\d+\.\d+\.\d+$/u.test(hostname)) {
     return true;
   }
 
@@ -150,7 +150,7 @@ if (!$wnd.Vaadin?.connectionState) {
     online = navigator.onLine;
   }
 
-  $wnd.Vaadin ||= {};
+  $wnd.Vaadin ??= {};
   $wnd.Vaadin.connectionState = new ConnectionStateStore(
     online ? ConnectionState.CONNECTED : ConnectionState.CONNECTION_LOST,
   );
