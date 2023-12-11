@@ -43,7 +43,7 @@ export class ConnectionIndicator extends LitElement {
   static create(): ConnectionIndicator {
     const $wnd = window as any;
     if (!$wnd.Vaadin?.connectionIndicator) {
-      $wnd.Vaadin ||= {};
+      $wnd.Vaadin ??= {};
       $wnd.Vaadin.connectionIndicator = document.createElement('vaadin-connection-indicator');
       document.body.appendChild($wnd.Vaadin.connectionIndicator);
     }
