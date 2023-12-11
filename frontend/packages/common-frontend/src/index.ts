@@ -7,5 +7,5 @@ $wnd.Vaadin.registrations ??= [];
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
 $wnd.Vaadin.registrations.push({
   is: '@vaadin/common-frontend',
-  version: /* updated-by-script */ '0.0.18',
+  version: /* updated-by-script */ '0.0.19',
 });
