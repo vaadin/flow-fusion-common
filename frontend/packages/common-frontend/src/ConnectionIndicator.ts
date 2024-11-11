@@ -454,10 +454,10 @@ export class ConnectionIndicator extends LitElement {
 
   private timeoutFor(timeoutId: number, enabled: boolean, handler: () => void, delay: number): number {
     if (timeoutId !== 0) {
-      self.window.clearTimeout(timeoutId);
+      self.clearTimeout(timeoutId);
     }
 
-    return enabled ? self.window.setTimeout(handler, delay) : 0;
+    return enabled ? self.setTimeout(handler, delay) : 0;
   }
 
   static get instance(): ConnectionIndicator {
