@@ -41,7 +41,7 @@ export class ConnectionIndicator extends LitElement {
    * window.Vaadin.connectionIndicator and add instance to the document body.
    */
   static create(): ConnectionIndicator {
-    const $wnd = window as any;
+    const $wnd = self as any;
     if (!$wnd.Vaadin?.connectionIndicator) {
       $wnd.Vaadin ??= {};
       $wnd.Vaadin.connectionIndicator = document.createElement('vaadin-connection-indicator');
@@ -454,10 +454,10 @@ export class ConnectionIndicator extends LitElement {
 
   private timeoutFor(timeoutId: number, enabled: boolean, handler: () => void, delay: number): number {
     if (timeoutId !== 0) {
-      window.clearTimeout(timeoutId);
+      self.clearTimeout(timeoutId);
     }
 
-    return enabled ? window.setTimeout(handler, delay) : 0;
+    return enabled ? self.setTimeout(handler, delay) : 0;
   }
 
   static get instance(): ConnectionIndicator {

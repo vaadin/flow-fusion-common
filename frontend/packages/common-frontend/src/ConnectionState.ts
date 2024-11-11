@@ -140,10 +140,11 @@ export const isLocalhost = (hostname: string) => {
   return false;
 };
 
-const $wnd = window as any;
+const $wnd = self as any;
 if (!$wnd.Vaadin?.connectionState) {
   let online;
-  if (isLocalhost(window.location.hostname)) {
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (self.location && isLocalhost(self.location.hostname)) {
     // We do not know if we are online or not as we cannot trust navigator.onLine which checks availability of a network connection. Better to assume online so localhost apps can work
     online = true;
   } else {
