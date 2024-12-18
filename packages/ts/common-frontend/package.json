@@ -8,16 +8,20 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/vaadin/flow-hilla-common.git",
-    "directory": "frontend/packages/common-frontend"
+    "directory": "packages/ts/common-frontend"
   },
   "keywords": [
     "Vaadin",
     "Hilla"
   ],
   "scripts": {
-    "build": "tsc --isolatedModules",
-    "lint": "eslint --fix src/**/*.ts",
-    "test": "web-test-runner \"test/**/*.test.ts\" --config ../../web-test-runner.config.js",
+    "clean:build": "git clean -fx  -e .vite -e node_modules",
+    "build": "concurrently npm:build:*",
+    "build:esbuild": "tsx ../../../scripts/build.ts",
+    "build:dts": "tsc --isolatedModules -p tsconfig.build.json",
+    "lint": "eslint src test",
+    "lint:fix": "eslint src test --fix",
+    "test": "web-test-runner \"test/**/*.test.ts\" --config ../../../web-test-runner.config.js",
     "test:coverage": "npm run test -- --coverage",
     "test:watch": "npm run test -- --watch",
     "typecheck": "tsc --noEmit"
@@ -48,9 +52,6 @@
   "publishConfig": {
     "access": "public"
   },
-  "dependencies": {
-    "tslib": "^2.3.1"
-  },
   "peerDependencies": {
     "lit": "^3.0.0"
   },
@@ -58,11 +59,8 @@
     "@esm-bundle/chai": "^4.3.4-fix.0",
     "@open-wc/testing": "^4.0.0",
     "@types/chai": "^4.2.21",
-    "@types/mocha": "^10.0.3",
     "@types/sinon": "^17.0.2",
     "@types/sinon-chai": "^3.2.5",
-    "@web/test-runner": "^0.18.0",
-    "mocha": "^10.2.0",
     "sinon": "^17.0.1"
   }
 }

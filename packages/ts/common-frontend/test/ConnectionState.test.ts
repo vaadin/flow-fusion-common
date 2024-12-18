@@ -1,7 +1,6 @@
-import type { describe, it } from 'mocha';
 import { assert, expect } from '@open-wc/testing';
 import sinon from 'sinon';
-import { ConnectionState, ConnectionStateStore, isLocalhost } from '../src';
+import { ConnectionState, ConnectionStateStore, isLocalhost } from '../src/index.js';
 
 describe('ConnectionStateStore', () => {
   it('should call state change listeners when transitioning between states', () => {

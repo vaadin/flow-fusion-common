@@ -1,9 +1,11 @@
-/* eslint-disable import/no-extraneous-dependencies,camelcase */
-import meow from 'meow';
+/* eslint-disable camelcase */
+import { parseArgs } from 'node:util';
 
 const {
-  input: [response],
-} = meow({ importMeta: import.meta });
+  positionals: [response],
+} = parseArgs({
+  strict: false,
+});
 
 const {
   required_status_checks,
@@ -19,6 +21,7 @@ const {
 const remapped = {
   required_status_checks: required_status_checks
     ? {
+        enforcement_level: 'everyone',
         strict: required_status_checks.strict,
         contexts: required_status_checks.contexts,
       }

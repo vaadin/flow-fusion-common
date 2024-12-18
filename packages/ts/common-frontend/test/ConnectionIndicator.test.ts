@@ -13,9 +13,8 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-import type { describe, it } from 'mocha';
 import { assert } from '@open-wc/testing';
-import { ConnectionIndicator, ConnectionState, ConnectionStateStore } from '../src';
+import { ConnectionIndicator, ConnectionState, ConnectionStateStore } from '../src/index.js';
 
 const $wnd = window as any;
 

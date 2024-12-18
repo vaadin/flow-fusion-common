@@ -1,0 +1,46 @@
+{
+  "name": "@vaadin/hilla-flow-common-frontend",
+  "private": true,
+  "description": "Frontend code shared by Vaadin Flow and Hilla",
+  "main": "index.js",
+  "type": "module",
+  "engines": {
+    "node": ">=16.19.0",
+    "npm": ">=9"
+  },
+  "workspaces": [
+    "packages/ts/*"
+  ],
+  "scripts": {
+    "clean:build": "nx run-many -t clean:build --all --output-style stream",
+    "check": "nx run-many -t lint,typecheck --all --output-style stream",
+    "build": "nx run-many -t build --all --output-style stream",
+    "build:nocache": "npm run build",
+    "lint": "nx run-many -t lint --all --output-style stream",
+    "lint:fix": "nx run-many -t lint:fix --all --output-style stream",
+    "test": "nx run-many -t test --all --output-style stream",
+    "test:coverage": "nx run-many -t test:coverage --all --output-style stream",
+    "typecheck": "nx run-many -t typecheck --all --output-style stream"
+  },
+  "repository": {
+    "type": "git",
+    "url": "github.com/vaadin/flow-hilla-common"
+  },
+  "author": "Vaadin Ltd",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "concurrently": "^9.1.0",
+    "cssnano": "^7.0.6",
+    "esbuild": "^0.24.0",
+    "eslint": "^8",
+    "eslint-config-vaadin": "^1.0.0-alpha.28",
+    "eslint-plugin-tsdoc": "^0.4.0",
+    "glob": "^11.0.0",
+    "lint-staged": "^15.2.11",
+    "postcss": "^8.4.49",
+    "prettier": "^3.4.2",
+    "simple-git-hooks": "^2.11.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}
