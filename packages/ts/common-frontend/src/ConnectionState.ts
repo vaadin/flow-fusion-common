@@ -1,3 +1,19 @@
+/*
+ * Copyright 2000-2025 Vaadin Ltd.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License"); you may not
+ * use this file except in compliance with the License. You may obtain a copy of
+ * the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations under
+ * the License.
+ */
+
 export enum ConnectionState {
   /**
    * Application is connected to server: last transaction over the wire (XHR /
@@ -31,23 +47,21 @@ export enum ConnectionState {
 export type ConnectionStateChangeListener = (previous: ConnectionState, current: ConnectionState) => void;
 
 export class ConnectionStateStore {
-  private connectionState: ConnectionState;
+  #connectionState: ConnectionState;
 
-  private readonly stateChangeListeners = new Set<ConnectionStateChangeListener>();
+  readonly #stateChangeListeners = new Set<ConnectionStateChangeListener>();
 
-  private loadingCount = 0;
+  #loadingCount = 0;
 
   constructor(initialState: ConnectionState) {
-    this.connectionState = initialState;
-
-    this.serviceWorkerMessageListener = this.serviceWorkerMessageListener.bind(this);
+    this.#connectionState = initialState;
 
     // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
     if (navigator.serviceWorker) {
       // Query service worker if the most recent fetch was served from cache
       // Add message listener for handling response
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      navigator.serviceWorker.addEventListener('message', this.serviceWorkerMessageListener);
+      navigator.serviceWorker.addEventListener('message', this.#serviceWorkerMessageListener);
       // Send JSON-RPC request to Vaadin service worker
       // eslint-disable-next-line no-void
       void navigator.serviceWorker.ready.then((registration) => {
@@ -60,59 +74,59 @@ export class ConnectionStateStore {
   }
 
   addStateChangeListener(listener: ConnectionStateChangeListener): void {
-    this.stateChangeListeners.add(listener);
+    this.#stateChangeListeners.add(listener);
   }
 
   removeStateChangeListener(listener: ConnectionStateChangeListener): void {
-    this.stateChangeListeners.delete(listener);
+    this.#stateChangeListeners.delete(listener);
   }
 
   loadingStarted(): void {
     this.state = ConnectionState.LOADING;
-    this.loadingCount += 1;
+    this.#loadingCount += 1;
   }
 
   loadingFinished(): void {
-    this.decreaseLoadingCount(ConnectionState.CONNECTED);
+    this.#decreaseLoadingCount(ConnectionState.CONNECTED);
   }
 
   loadingFailed(): void {
-    this.decreaseLoadingCount(ConnectionState.CONNECTION_LOST);
+    this.#decreaseLoadingCount(ConnectionState.CONNECTION_LOST);
   }
 
-  private decreaseLoadingCount(finalState: ConnectionState) {
-    if (this.loadingCount > 0) {
-      this.loadingCount -= 1;
-      if (this.loadingCount === 0) {
+  #decreaseLoadingCount(finalState: ConnectionState) {
+    if (this.#loadingCount > 0) {
+      this.#loadingCount -= 1;
+      if (this.#loadingCount === 0) {
         this.state = finalState;
       }
     }
   }
 
   get state(): ConnectionState {
-    return this.connectionState;
+    return this.#connectionState;
   }
 
   set state(newState: ConnectionState) {
-    if (newState !== this.connectionState) {
-      const prevState = this.connectionState;
-      this.connectionState = newState;
-      this.loadingCount = 0;
-      for (const listener of this.stateChangeListeners) {
-        listener(prevState, this.connectionState);
+    if (newState !== this.#connectionState) {
+      const prevState = this.#connectionState;
+      this.#connectionState = newState;
+      this.#loadingCount = 0;
+      for (const listener of this.#stateChangeListeners) {
+        listener(prevState, this.#connectionState);
       }
     }
   }
 
   get online(): boolean {
-    return this.connectionState === ConnectionState.CONNECTED || this.connectionState === ConnectionState.LOADING;
+    return this.#connectionState === ConnectionState.CONNECTED || this.#connectionState === ConnectionState.LOADING;
   }
 
   get offline(): boolean {
     return !this.online;
   }
 
-  private serviceWorkerMessageListener(event: MessageEvent) {
+  #serviceWorkerMessageListener = (event: MessageEvent) => {
     // Handle JSON-RPC response from service worker
     if (typeof event.data === 'object' && event.data.id === 'Vaadin.ServiceWorker.isConnectionLost') {
       if (event.data.result === true) {
@@ -121,24 +135,22 @@ export class ConnectionStateStore {
 
       // Cleanup: remove event listener upon receiving response
       // eslint-disable-next-line @typescript-eslint/unbound-method
-      navigator.serviceWorker.removeEventListener('message', this.serviceWorkerMessageListener);
+      navigator.serviceWorker.removeEventListener('message', this.#serviceWorkerMessageListener);
     }
-  }
+  };
 }
 
-export const isLocalhost = (hostname: string) => {
+export function isLocalhost(hostname: string): boolean {
   if (hostname === 'localhost') {
     return true;
   }
+
   if (hostname === '[::1]') {
     return true;
   }
-  if (/^127\.\d+\.\d+\.\d+$/u.test(hostname)) {
-    return true;
-  }
 
-  return false;
-};
+  return /^127\.\d+\.\d+\.\d+$/u.test(hostname);
+}
 
 const $wnd = window as any;
 if (!$wnd.Vaadin?.connectionState) {

@@ -21,7 +21,7 @@
     "build:dts": "tsc --isolatedModules -p tsconfig.build.json",
     "lint": "eslint src test",
     "lint:fix": "eslint src test --fix",
-    "test": "web-test-runner \"test/**/*.test.ts\" --config ../../../web-test-runner.config.js",
+    "test": "vitest",
     "test:coverage": "npm run test -- --coverage",
     "test:watch": "npm run test -- --watch",
     "typecheck": "tsc --noEmit"
@@ -56,11 +56,15 @@
     "lit": "^3.0.0"
   },
   "devDependencies": {
-    "@esm-bundle/chai": "^4.3.4-fix.0",
-    "@open-wc/testing": "^4.0.0",
     "@types/chai": "^4.2.21",
     "@types/sinon": "^17.0.2",
-    "@types/sinon-chai": "^3.2.5",
-    "sinon": "^17.0.1"
+    "@types/sinon-chai": "^3.2.12",
+    "@vitest/browser": "^3.0.0-beta.2",
+    "@vitest/ui": "^3.0.0-beta.2",
+    "chai": "^5.1.2",
+    "playwright-core": "^1.49.1",
+    "sinon": "^17.0.1",
+    "sinon-chai": "^4.0.0",
+    "vitest": "^3.0.0-beta.2"
   }
 }

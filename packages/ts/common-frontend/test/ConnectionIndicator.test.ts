@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2020 Vaadin Ltd.
+ * Copyright 2000-2025 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,10 +13,13 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-import { assert } from '@open-wc/testing';
+import { assert } from 'chai';
+import { afterEach, beforeEach, describe, it } from 'vitest';
 import { ConnectionIndicator, ConnectionState, ConnectionStateStore } from '../src/index.js';
 
 const $wnd = window as any;
+
+console.log('AAAAAAAAAAAAAAAAAAAAAAAAAA');
 
 describe('ConnectionIndicator', () => {
   let connectionIndicator: ConnectionIndicator;
@@ -113,6 +116,7 @@ describe('ConnectionIndicator', () => {
     });
 
     it('initial state: loading', async () => {
+      console.log('AAAAAAAAAAAAAAAAAAAAAAAAAA');
       try {
         connectionStateStore.state = ConnectionState.LOADING;
         await setupIndicator();

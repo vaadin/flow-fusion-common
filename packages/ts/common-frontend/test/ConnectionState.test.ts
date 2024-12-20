@@ -1,6 +1,10 @@
-import { assert, expect } from '@open-wc/testing';
+import { assert, expect, use } from 'chai';
 import sinon from 'sinon';
+import sinonChai from 'sinon-chai';
+import { describe, it } from 'vitest';
 import { ConnectionState, ConnectionStateStore, isLocalhost } from '../src/index.js';
+
+use(sinonChai);
 
 describe('ConnectionStateStore', () => {
   it('should call state change listeners when transitioning between states', () => {

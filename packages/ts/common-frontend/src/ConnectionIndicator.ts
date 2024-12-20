@@ -1,5 +1,5 @@
 /*
- * Copyright 2000-2020 Vaadin Ltd.
+ * Copyright 2000-2025 Vaadin Ltd.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -31,11 +31,21 @@ export const enum LoadingBarState {
   THIRD = 'third',
 }
 
+declare global {
+  interface HTMLElementTagNameMap {
+    'vaadin-connection-indicator': ConnectionIndicator;
+  }
+}
+
 /**
  * Component showing loading and connection indicator. When added to DOM,
  * listens for changes on `window.Vaadin.connectionState` ConnectionStateStore.
  */
 export class ConnectionIndicator extends LitElement {
+  static get instance(): ConnectionIndicator {
+    return ConnectionIndicator.create();
+  }
+
   /**
    * Initialize global connection indicator instance at
    * window.Vaadin.connectionIndicator and add instance to the document body.
@@ -54,142 +64,142 @@ export class ConnectionIndicator extends LitElement {
    * The delay before showing the loading indicator, in ms.
    */
   @property({ type: Number })
-  firstDelay = 450;
+  accessor firstDelay = 450;
 
   /**
    * The delay before the loading indicator goes into "second" state, in ms.
    */
   @property({ type: Number })
-  secondDelay = 1500;
+  accessor secondDelay = 1500;
 
   /**
    * The delay before the loading indicator goes into "third" state, in ms.
    */
   @property({ type: Number })
-  thirdDelay = 5000;
+  accessor thirdDelay = 5000;
 
   /**
    * The duration for which the connection state change message is visible,
    * in ms.
    */
   @property({ type: Number })
-  expandedDuration = 2000;
+  accessor expandedDuration = 2000;
 
   /**
    * The message shown when the connection goes to connected state.
    */
   @property({ type: String })
-  onlineText = 'Online';
+  accessor onlineText = 'Online';
 
   /**
    * The message shown when the connection goes to lost state.
    */
   @property({ type: String })
-  offlineText = 'Connection lost';
+  accessor offlineText = 'Connection lost';
 
   /**
    * The message shown when the connection goes to reconnecting state.
    */
   @property({ type: String })
-  reconnectingText = 'Connection lost, trying to reconnect...';
+  accessor reconnectingText = 'Connection lost, trying to reconnect...';
 
-  @property({ type: Boolean, reflect: true })
-  private offline = false;
+  @property({ type: Boolean, reflect: true, attribute: 'offline' })
+  accessor #offline = false;
 
-  @property({ type: Boolean, reflect: true })
-  private reconnecting = false;
+  @property({ type: Boolean, reflect: true, attribute: 'reconnecting' })
+  accessor #reconnecting = false;
 
-  @property({ type: Boolean, reflect: true })
-  private expanded = false;
+  @property({ type: Boolean, reflect: true, attribute: 'expanded' })
+  accessor #expanded = false;
 
-  @property({ type: Boolean, reflect: true })
-  private loading = false;
+  @property({ type: Boolean, reflect: true, attribute: 'loading' })
+  accessor #loading = false;
 
   @property({ type: String })
-  private loadingBarState: LoadingBarState = LoadingBarState.IDLE;
+  accessor #loadingBarState: LoadingBarState = LoadingBarState.IDLE;
 
-  private applyDefaultThemeState = true;
+  #applyDefaultThemeState = true;
 
-  private firstTimeout = 0;
+  #firstTimeout = 0;
 
-  private secondTimeout = 0;
+  #secondTimeout = 0;
 
-  private thirdTimeout = 0;
+  #thirdTimeout = 0;
 
-  private expandedTimeout = 0;
+  #expandedTimeout = 0;
 
-  private connectionStateStore?: ConnectionStateStore;
+  #connectionStateStore?: ConnectionStateStore;
 
-  private readonly connectionStateListener: () => void;
+  readonly connectionStateListener: () => void;
 
-  private lastMessageState: ConnectionState = ConnectionState.CONNECTED;
+  #lastMessageState: ConnectionState = ConnectionState.CONNECTED;
 
   constructor() {
     super();
 
     this.connectionStateListener = () => {
-      this.expanded = this.updateConnectionState();
-      this.expandedTimeout = this.timeoutFor(
-        this.expandedTimeout,
-        this.expanded,
+      this.#expanded = this.#updateConnectionState();
+      this.#expandedTimeout = this.#timeoutFor(
+        this.#expandedTimeout,
+        this.#expanded,
         () => {
-          this.expanded = false;
+          this.#expanded = false;
         },
         this.expandedDuration,
       );
     };
   }
 
-  protected render() {
+  protected override render() {
     return html`
-      <div class="v-loading-indicator ${this.loadingBarState}" style=${this.getLoadingBarStyle()}></div>
+      <div class="v-loading-indicator ${this.#loadingBarState}" style=${this.#getLoadingBarStyle()}></div>
 
       <div
         class="v-status-message ${classMap({
-          active: this.reconnecting,
+          active: this.#reconnecting,
         })}"
       >
-        <span class="text"> ${this.renderMessage()} </span>
+        <span class="text"> ${this.#renderMessage()} </span>
       </div>
     `;
   }
 
-  connectedCallback() {
+  override connectedCallback() {
     super.connectedCallback();
 
     const $wnd = window as any;
     if ($wnd.Vaadin?.connectionState) {
-      this.connectionStateStore = $wnd.Vaadin.connectionState as ConnectionStateStore;
-      this.connectionStateStore.addStateChangeListener(this.connectionStateListener);
-      this.updateConnectionState();
+      this.#connectionStateStore = $wnd.Vaadin.connectionState as ConnectionStateStore;
+      this.#connectionStateStore.addStateChangeListener(this.connectionStateListener);
+      this.#updateConnectionState();
     }
 
-    this.updateTheme();
+    this.#updateTheme();
   }
 
-  disconnectedCallback() {
+  override disconnectedCallback() {
     super.disconnectedCallback();
 
-    if (this.connectionStateStore) {
-      this.connectionStateStore.removeStateChangeListener(this.connectionStateListener);
+    if (this.#connectionStateStore) {
+      this.#connectionStateStore.removeStateChangeListener(this.connectionStateListener);
     }
 
-    this.updateTheme();
+    this.#updateTheme();
   }
 
-  @property({ type: Boolean })
   get applyDefaultTheme() {
-    return this.applyDefaultThemeState;
+    return this.#applyDefaultThemeState;
   }
 
+  @property({ type: Boolean, reflect: true })
   set applyDefaultTheme(applyDefaultTheme: boolean) {
-    if (applyDefaultTheme !== this.applyDefaultThemeState) {
-      this.applyDefaultThemeState = applyDefaultTheme;
-      this.updateTheme();
+    if (applyDefaultTheme !== this.#applyDefaultThemeState) {
+      this.#applyDefaultThemeState = applyDefaultTheme;
+      this.#updateTheme();
     }
   }
 
-  protected createRenderRoot() {
+  protected override createRenderRoot() {
     return this;
   }
 
@@ -199,18 +209,18 @@ export class ConnectionIndicator extends LitElement {
    * @returns true if the connection message changes, and therefore a new
    * message should be shown
    */
-  private updateConnectionState(): boolean {
-    const state = this.connectionStateStore?.state;
-    this.offline = state === ConnectionState.CONNECTION_LOST;
-    this.reconnecting = state === ConnectionState.RECONNECTING;
-    this.updateLoading(state === ConnectionState.LOADING);
-    if (this.loading) {
+  #updateConnectionState(): boolean {
+    const state = this.#connectionStateStore?.state;
+    this.#offline = state === ConnectionState.CONNECTION_LOST;
+    this.#reconnecting = state === ConnectionState.RECONNECTING;
+    this.#updateLoading(state === ConnectionState.LOADING);
+    if (this.#loading) {
       // Entering loading state, do not show message
       return false;
     }
 
-    if (state !== this.lastMessageState) {
-      this.lastMessageState = state!;
+    if (state !== this.#lastMessageState) {
+      this.#lastMessageState = state!;
       // Message changes, show new message
       return true;
     }
@@ -219,56 +229,56 @@ export class ConnectionIndicator extends LitElement {
     return false;
   }
 
-  private updateLoading(loading: boolean) {
-    this.loading = loading;
-    this.loadingBarState = LoadingBarState.IDLE;
+  #updateLoading(loading: boolean) {
+    this.#loading = loading;
+    this.#loadingBarState = LoadingBarState.IDLE;
 
-    this.firstTimeout = this.timeoutFor(
-      this.firstTimeout,
+    this.#firstTimeout = this.#timeoutFor(
+      this.#firstTimeout,
       loading,
       () => {
-        this.loadingBarState = LoadingBarState.FIRST;
+        this.#loadingBarState = LoadingBarState.FIRST;
       },
       this.firstDelay,
     );
 
-    this.secondTimeout = this.timeoutFor(
-      this.secondTimeout,
+    this.#secondTimeout = this.#timeoutFor(
+      this.#secondTimeout,
       loading,
       () => {
-        this.loadingBarState = LoadingBarState.SECOND;
+        this.#loadingBarState = LoadingBarState.SECOND;
       },
       this.secondDelay,
     );
 
-    this.thirdTimeout = this.timeoutFor(
-      this.thirdTimeout,
+    this.#thirdTimeout = this.#timeoutFor(
+      this.#thirdTimeout,
       loading,
       () => {
-        this.loadingBarState = LoadingBarState.THIRD;
+        this.#loadingBarState = LoadingBarState.THIRD;
       },
       this.thirdDelay,
     );
   }
 
-  private renderMessage() {
-    if (this.reconnecting) {
+  #renderMessage() {
+    if (this.#reconnecting) {
       return this.reconnectingText;
     }
 
-    if (this.offline) {
+    if (this.#offline) {
       return this.offlineText;
     }
 
     return this.onlineText;
   }
 
-  private updateTheme() {
-    if (this.applyDefaultThemeState && this.isConnected) {
+  #updateTheme() {
+    if (this.#applyDefaultThemeState && this.isConnected) {
       if (!document.getElementById(DEFAULT_STYLE_ID)) {
         const style = document.createElement('style');
         style.id = DEFAULT_STYLE_ID;
-        style.textContent = this.getDefaultStyle();
+        style.textContent = this.#getDefaultStyle();
         document.head.appendChild(style);
       }
     } else {
@@ -279,7 +289,7 @@ export class ConnectionIndicator extends LitElement {
     }
   }
 
-  private getDefaultStyle(): string {
+  #getDefaultStyle(): string {
     return `
       @keyframes v-progress-start {
         0% {
@@ -439,8 +449,8 @@ export class ConnectionIndicator extends LitElement {
     `;
   }
 
-  private getLoadingBarStyle(): string {
-    switch (this.loadingBarState) {
+  #getLoadingBarStyle(): string {
+    switch (this.#loadingBarState) {
       case LoadingBarState.IDLE:
         return 'display: none';
       case LoadingBarState.FIRST:
@@ -452,16 +462,12 @@ export class ConnectionIndicator extends LitElement {
     }
   }
 
-  private timeoutFor(timeoutId: number, enabled: boolean, handler: () => void, delay: number): number {
+  #timeoutFor(timeoutId: number, enabled: boolean, handler: () => void, delay: number): number {
     if (timeoutId !== 0) {
       window.clearTimeout(timeoutId);
     }
 
     return enabled ? window.setTimeout(handler, delay) : 0;
-  }
-
-  static get instance(): ConnectionIndicator {
-    return ConnectionIndicator.create();
   }
 }
 
