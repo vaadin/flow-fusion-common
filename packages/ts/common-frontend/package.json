@@ -21,9 +21,9 @@
     "build:dts": "tsc --isolatedModules -p tsconfig.build.json",
     "lint": "eslint src test",
     "lint:fix": "eslint src test --fix",
-    "test": "vitest",
-    "test:coverage": "npm run test -- --coverage",
-    "test:watch": "npm run test -- --watch",
+    "test": "vitest --run",
+    "test:watch": "vitest --inspect --no-file-parallelism",
+    "test:coverage": "npm test -- --coverage",
     "typecheck": "tsc --noEmit"
   },
   "exports": {
@@ -59,12 +59,11 @@
     "@types/chai": "^4.2.21",
     "@types/sinon": "^17.0.2",
     "@types/sinon-chai": "^3.2.12",
-    "@vitest/browser": "^3.0.0-beta.2",
-    "@vitest/ui": "^3.0.0-beta.2",
-    "chai": "^5.1.2",
+    "@vitest/browser": "^3.0.0-beta.3",
+    "@vitest/ui": "^3.0.0-beta.3",
     "playwright-core": "^1.49.1",
     "sinon": "^17.0.1",
     "sinon-chai": "^4.0.0",
-    "vitest": "^3.0.0-beta.2"
+    "vitest": "^3.0.0-beta.3"
   }
 }

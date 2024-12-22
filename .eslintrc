@@ -6,7 +6,7 @@
     "vaadin/prettier"
   ],
   "ignorePatterns": ["packages/ts/*/test/**/*.snap.ts"],
-  "plugins": ["mocha", "tsdoc"],
+  "plugins": ["tsdoc"],
   "rules": {
     "@typescript-eslint/no-useless-template-literals": "off",
     "@typescript-eslint/class-methods-use-this": "off",
@@ -20,7 +20,6 @@
     "import/prefer-default-export": "off",
     "max-params": "off",
     "max-classes-per-file": "off",
-    "mocha/no-exclusive-tests": "error",
     "tsdoc/syntax": "error"
   }
 }

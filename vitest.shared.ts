@@ -1,8 +1,10 @@
-import { defineProject } from 'vitest/config';
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference types="vitest/node" />
+import { defineConfig } from 'vitest/config';
 
 const isCI = process.env.CI === 'true';
 
-export default defineProject({
+export default defineConfig({
   build: {
     target: 'esnext',
   },
@@ -14,6 +16,7 @@ export default defineProject({
     },
   },
   test: {
+    includeTaskLocation: !isCI,
     browser: {
       api: {
         port: 9876,
@@ -21,14 +24,17 @@ export default defineProject({
       ui: !isCI,
       screenshotFailures: isCI,
       provider: 'playwright',
-      enabled: true,
       name: 'chromium',
+      enabled: true,
       headless: true,
-      providerOptions: {
-        launch: {
-          executablePath: process.env.CHROME_BIN,
+      instances: [
+        {
+          browser: 'chromium',
+          launch: {
+            executablePath: process.env.CHROME_BIN,
+          },
         },
-      },
+      ],
     },
   },
 });

@@ -13,13 +13,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-import { assert } from 'chai';
-import { afterEach, beforeEach, describe, it } from 'vitest';
+import { assert, afterEach, beforeEach, describe, it } from 'vitest';
 import { ConnectionIndicator, ConnectionState, ConnectionStateStore } from '../src/index.js';
 
 const $wnd = window as any;
-
-console.log('AAAAAAAAAAAAAAAAAAAAAAAAAA');
 
 describe('ConnectionIndicator', () => {
   let connectionIndicator: ConnectionIndicator;
@@ -116,7 +113,7 @@ describe('ConnectionIndicator', () => {
     });
 
     it('initial state: loading', async () => {
-      console.log('AAAAAAAAAAAAAAAAAAAAAAAAAA');
+      debugger;
       try {
         connectionStateStore.state = ConnectionState.LOADING;
         await setupIndicator();

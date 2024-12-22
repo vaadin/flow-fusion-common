@@ -15,7 +15,7 @@
  */
 
 import { html, LitElement } from 'lit';
-import { property } from 'lit/decorators.js';
+import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
 import { ConnectionState, type ConnectionStateStore } from './ConnectionState.js';
 
@@ -103,19 +103,19 @@ export class ConnectionIndicator extends LitElement {
   @property({ type: String })
   accessor reconnectingText = 'Connection lost, trying to reconnect...';
 
-  @property({ type: Boolean, reflect: true, attribute: 'offline' })
-  accessor #offline = false;
+  @property({ type: Boolean, reflect: true })
+  accessor offline = false;
 
-  @property({ type: Boolean, reflect: true, attribute: 'reconnecting' })
-  accessor #reconnecting = false;
+  @property({ type: Boolean, reflect: true })
+  accessor reconnecting = false;
 
-  @property({ type: Boolean, reflect: true, attribute: 'expanded' })
-  accessor #expanded = false;
+  @property({ type: Boolean, reflect: true })
+  accessor expanded = false;
 
-  @property({ type: Boolean, reflect: true, attribute: 'loading' })
-  accessor #loading = false;
+  @property({ type: Boolean, reflect: true })
+  accessor loading = false;
 
-  @property({ type: String })
+  @state()
   accessor #loadingBarState: LoadingBarState = LoadingBarState.IDLE;
 
   #applyDefaultThemeState = true;
@@ -138,12 +138,12 @@ export class ConnectionIndicator extends LitElement {
     super();
 
     this.connectionStateListener = () => {
-      this.#expanded = this.#updateConnectionState();
+      this.expanded = this.#updateConnectionState();
       this.#expandedTimeout = this.#timeoutFor(
         this.#expandedTimeout,
-        this.#expanded,
+        this.expanded,
         () => {
-          this.#expanded = false;
+          this.expanded = false;
         },
         this.expandedDuration,
       );
@@ -156,7 +156,7 @@ export class ConnectionIndicator extends LitElement {
 
       <div
         class="v-status-message ${classMap({
-          active: this.#reconnecting,
+          active: this.reconnecting,
         })}"
       >
         <span class="text"> ${this.#renderMessage()} </span>
@@ -211,10 +211,10 @@ export class ConnectionIndicator extends LitElement {
    */
   #updateConnectionState(): boolean {
     const state = this.#connectionStateStore?.state;
-    this.#offline = state === ConnectionState.CONNECTION_LOST;
-    this.#reconnecting = state === ConnectionState.RECONNECTING;
+    this.offline = state === ConnectionState.CONNECTION_LOST;
+    this.reconnecting = state === ConnectionState.RECONNECTING;
     this.#updateLoading(state === ConnectionState.LOADING);
-    if (this.#loading) {
+    if (this.loading) {
       // Entering loading state, do not show message
       return false;
     }
@@ -230,7 +230,7 @@ export class ConnectionIndicator extends LitElement {
   }
 
   #updateLoading(loading: boolean) {
-    this.#loading = loading;
+    this.loading = loading;
     this.#loadingBarState = LoadingBarState.IDLE;
 
     this.#firstTimeout = this.#timeoutFor(
@@ -262,11 +262,11 @@ export class ConnectionIndicator extends LitElement {
   }
 
   #renderMessage() {
-    if (this.#reconnecting) {
+    if (this.reconnecting) {
       return this.reconnectingText;
     }
 
-    if (this.#offline) {
+    if (this.offline) {
       return this.offlineText;
     }
 

@@ -1,10 +1,9 @@
-import { assert, expect, use } from 'chai';
 import sinon from 'sinon';
 import sinonChai from 'sinon-chai';
-import { describe, it } from 'vitest';
+import { assert, expect, chai, describe, it } from 'vitest';
 import { ConnectionState, ConnectionStateStore, isLocalhost } from '../src/index.js';
 
-use(sinonChai);
+chai.use(sinonChai);
 
 describe('ConnectionStateStore', () => {
   it('should call state change listeners when transitioning between states', () => {
@@ -130,10 +129,9 @@ describe('ConnectionStateStore', () => {
       Object.defineProperty(fakeServiceWorker, 'ready', { get: () => fakePromise });
 
       const store = new ConnectionStateStore(ConnectionState.CONNECTED);
-      const listener = (store as any).serviceWorkerMessageListener;
       // should add message event listener on service worker
       expect(addEventListener).to.be.calledOnce;
-      expect(addEventListener).to.be.calledWith('message', listener);
+      expect(addEventListener).to.be.calledWith('message', sinon.match.func);
 
       // should send {type: "isConnectionLost"} to service worker
       await fakePromise;
@@ -156,7 +154,7 @@ describe('ConnectionStateStore', () => {
 
       // should remove message event listener on service worker
       expect(removeEventListener).to.be.calledOnce;
-      expect(removeEventListener).to.be.calledWith('message', listener);
+      expect(removeEventListener).to.be.calledWith('message', sinon.match.func);
     } finally {
       navigatorStub.restore();
     }

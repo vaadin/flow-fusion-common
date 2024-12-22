@@ -47,10 +47,9 @@ export enum ConnectionState {
 export type ConnectionStateChangeListener = (previous: ConnectionState, current: ConnectionState) => void;
 
 export class ConnectionStateStore {
-  #connectionState: ConnectionState;
-
   readonly #stateChangeListeners = new Set<ConnectionStateChangeListener>();
 
+  #connectionState: ConnectionState;
   #loadingCount = 0;
 
   constructor(initialState: ConnectionState) {
