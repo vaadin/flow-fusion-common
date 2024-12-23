@@ -126,7 +126,7 @@ describe('ConnectionStateStore', () => {
     try {
       const postMessage = sinon.spy();
       const fakePromise = Promise.resolve({ active: { postMessage } });
-      Object.defineProperty(fakeServiceWorker, 'ready', { get: () => fakePromise });
+      Object.defineProperty(fakeServiceWorker, 'ready', { get: async () => await fakePromise });
 
       const store = new ConnectionStateStore(ConnectionState.CONNECTED);
       // should add message event listener on service worker
@@ -159,7 +159,7 @@ describe('ConnectionStateStore', () => {
       navigatorStub.restore();
     }
   });
-  it('should know which hosts are localhost', async () => {
+  it('should know which hosts are localhost', () => {
     expect(isLocalhost('localhost')).to.be.true;
     expect(isLocalhost('127.0.0.1')).to.be.true;
     expect(isLocalhost('127.0.0.2')).to.be.true;

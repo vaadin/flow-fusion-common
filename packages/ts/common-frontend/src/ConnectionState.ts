@@ -125,7 +125,7 @@ export class ConnectionStateStore {
     return !this.online;
   }
 
-  #serviceWorkerMessageListener = (event: MessageEvent) => {
+  readonly #serviceWorkerMessageListener = (event: MessageEvent) => {
     // Handle JSON-RPC response from service worker
     if (typeof event.data === 'object' && event.data.id === 'Vaadin.ServiceWorker.isConnectionLost') {
       if (event.data.result === true) {

@@ -210,17 +210,17 @@ export class ConnectionIndicator extends LitElement {
    * message should be shown
    */
   #updateConnectionState(): boolean {
-    const state = this.#connectionStateStore?.state;
-    this.offline = state === ConnectionState.CONNECTION_LOST;
-    this.reconnecting = state === ConnectionState.RECONNECTING;
-    this.#updateLoading(state === ConnectionState.LOADING);
+    const connectionState = this.#connectionStateStore?.state;
+    this.offline = connectionState === ConnectionState.CONNECTION_LOST;
+    this.reconnecting = connectionState === ConnectionState.RECONNECTING;
+    this.#updateLoading(connectionState === ConnectionState.LOADING);
     if (this.loading) {
       // Entering loading state, do not show message
       return false;
     }
 
-    if (state !== this.#lastMessageState) {
-      this.#lastMessageState = state!;
+    if (connectionState !== this.#lastMessageState) {
+      this.#lastMessageState = connectionState!;
       // Message changes, show new message
       return true;
     }

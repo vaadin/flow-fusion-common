@@ -14,16 +14,22 @@
  * the License.
  */
 import { assert, afterEach, beforeEach, describe, it } from 'vitest';
-import { ConnectionIndicator, ConnectionState, ConnectionStateStore } from '../src/index.js';
+import { type ConnectionIndicator, ConnectionState, ConnectionStateStore } from '../src/index.js';
 
 const $wnd = window as any;
+
+async function sleep(ms: number) {
+  await new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
 
 describe('ConnectionIndicator', () => {
   let connectionIndicator: ConnectionIndicator;
 
   describe('properties', () => {
     beforeEach(async () => {
-      connectionIndicator = document.createElement('vaadin-connection-indicator') as ConnectionIndicator;
+      connectionIndicator = document.createElement('vaadin-connection-indicator');
       document.body.prepend(connectionIndicator);
       await connectionIndicator.updateComplete;
     });
@@ -41,9 +47,9 @@ describe('ConnectionIndicator', () => {
       assert.equal(connectionIndicator.expandedDuration, 2000);
 
       // Strings
-      assert.match(connectionIndicator.onlineText, /online/i);
-      assert.match(connectionIndicator.offlineText, /connection lost/i);
-      assert.match(connectionIndicator.reconnectingText, /reconnect/i);
+      assert.match(connectionIndicator.onlineText, /online/iu);
+      assert.match(connectionIndicator.offlineText, /connection lost/iu);
+      assert.match(connectionIndicator.reconnectingText, /reconnect/iu);
 
       // Component state
       assert.isFalse(connectionIndicator.hasAttribute('loading'));
@@ -87,11 +93,11 @@ describe('ConnectionIndicator', () => {
     });
 
     async function setupIndicator() {
-      connectionIndicator = document.createElement('vaadin-connection-indicator') as ConnectionIndicator;
+      connectionIndicator = document.createElement('vaadin-connection-indicator');
       connectionIndicator.expandedDuration = 10;
       document.body.prepend(connectionIndicator);
       await connectionIndicator.updateComplete;
-      message = connectionIndicator.querySelector('.v-status-message > span') as HTMLSpanElement;
+      message = connectionIndicator.querySelector('.v-status-message > span')!;
     }
 
     function destroyIndicator() {
@@ -189,7 +195,7 @@ describe('ConnectionIndicator', () => {
         assert.equal(String(message.textContent).trim(), connectionIndicator.reconnectingText);
         // Message did change, should cause expanded
         assert.isTrue(connectionIndicator.hasAttribute('expanded'));
-        await new Promise((resolve) => setTimeout(resolve, 20));
+        await sleep(20);
         assert.isFalse(connectionIndicator.hasAttribute('expanded'));
 
         connectionStateStore.state = ConnectionState.CONNECTION_LOST;
@@ -200,7 +206,7 @@ describe('ConnectionIndicator', () => {
         assert.equal(String(message.textContent).trim(), connectionIndicator.offlineText);
         // Message did change, should cause expanded
         assert.isTrue(connectionIndicator.hasAttribute('expanded'));
-        await new Promise((resolve) => setTimeout(resolve, 20));
+        await sleep(20);
         assert.isFalse(connectionIndicator.hasAttribute('expanded'));
 
         connectionStateStore.state = ConnectionState.LOADING;
@@ -220,7 +226,7 @@ describe('ConnectionIndicator', () => {
         assert.equal(String(message.textContent).trim(), connectionIndicator.onlineText);
         // Message did change from before loading, should cause expanded
         assert.isTrue(connectionIndicator.hasAttribute('expanded'));
-        await new Promise((resolve) => setTimeout(resolve, 20));
+        await sleep(20);
         assert.isFalse(connectionIndicator.hasAttribute('expanded'));
       } finally {
         destroyIndicator();
@@ -270,7 +276,7 @@ describe('ConnectionIndicator', () => {
       connectionIndicator.secondDelay = 200;
       connectionIndicator.thirdDelay = 400;
 
-      const loadingBar = connectionIndicator.querySelector('.v-loading-indicator') as HTMLDivElement;
+      const loadingBar = connectionIndicator.querySelector('.v-loading-indicator')!;
       assert.equal(loadingBar.getAttribute('style'), 'display: none');
 
       connectionStateStore.state = ConnectionState.LOADING;
@@ -279,19 +285,19 @@ describe('ConnectionIndicator', () => {
       assert.isFalse(loadingBar.classList.contains('second'));
       assert.isFalse(loadingBar.classList.contains('third'));
 
-      await new Promise((resolve) => setTimeout(resolve, 150));
+      await sleep(150);
       assert.isTrue(loadingBar.classList.contains('first'));
       assert.isFalse(loadingBar.classList.contains('second'));
       assert.isFalse(loadingBar.classList.contains('third'));
       assert.equal(loadingBar.getAttribute('style'), 'display: block');
 
-      await new Promise((resolve) => setTimeout(resolve, 150));
+      await sleep(150);
       assert.isFalse(loadingBar.classList.contains('first'));
       assert.isTrue(loadingBar.classList.contains('second'));
       assert.isFalse(loadingBar.classList.contains('third'));
       assert.equal(loadingBar.getAttribute('style'), 'display: block');
 
-      await new Promise((resolve) => setTimeout(resolve, 150));
+      await sleep(150);
       assert.isFalse(loadingBar.classList.contains('first'));
       assert.isFalse(loadingBar.classList.contains('second'));
       assert.isTrue(loadingBar.classList.contains('third'));
