@@ -113,7 +113,6 @@ describe('ConnectionIndicator', () => {
     });
 
     it('initial state: loading', async () => {
-      debugger;
       try {
         connectionStateStore.state = ConnectionState.LOADING;
         await setupIndicator();

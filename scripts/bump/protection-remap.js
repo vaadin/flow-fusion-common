@@ -4,6 +4,8 @@ import { parseArgs } from 'node:util';
 const {
   positionals: [response],
 } = parseArgs({
+  args: process.argv.slice(2),
+  allowPositionals: true,
   strict: false,
 });
 

@@ -1,8 +1,11 @@
-// eslint-disable-next-line @typescript-eslint/triple-slash-reference
-/// <reference types="vitest/node" />
+// eslint-disable-next-line import/no-unassigned-import
+import 'vitest/node';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
 const isCI = process.env.CI === 'true';
+
+const cwd = pathToFileURL(`${process.cwd()}/`);
 
 export default defineConfig({
   build: {
@@ -16,6 +19,13 @@ export default defineConfig({
     },
   },
   test: {
+    coverage: {
+      all: true,
+      provider: 'v8',
+      reportsDirectory: fileURLToPath(new URL('.coverage/', cwd)),
+      clean: true,
+      reporter: isCI ? ['lcov'] : ['html'],
+    },
     includeTaskLocation: !isCI,
     browser: {
       api: {

@@ -7,33 +7,36 @@ on:
       - '.github/workflows/frontend.yml'
       - 'frontend/**/*'
       - '!frontend/.simple-git-hooks.json'
-      - '!frontend/.lintstagedrc.json'
+      - '!frontend/.lintstagedrc.js'
   pull_request:
     paths:
       - '.github/workflows/frontend.yml'
       - 'frontend/**/*'
       - '!frontend/.simple-git-hooks.json'
-      - '!frontend/.lintstagedrc.json'
-
-defaults:
-  run:
-    working-directory: frontend
+      - '!frontend/.lintstagedrc.js'
 
 jobs:
   testing:
     name: Test & Analysis
     runs-on: ubuntu-20.04
     timeout-minutes: 5
+    env:
+      NX_SKIP_NX_CACHE: true
 
     steps:
+      - name: Install Chrome
+        id: setup-chrome
+        uses: browser-actions/setup-chrome@v1
+      - run: |
+          ${{ steps.setup-chrome.outputs.chrome-path }} --version
       - name: Checkout Project Code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Use NodeJS LTS
-        uses: actions/setup-node@v1
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: 16.x
+          node-version: 'lts/*'
       - name: Install
         run: npm ci
       - name: Build
@@ -44,15 +47,16 @@ jobs:
         run: npm run test:coverage
         env:
           CI: true
+          CHROME_BIN: ${{ steps.setup-chrome.outputs.chrome-path }}
       - name: Collect Coverage
         run: |
           COVFILES=$(find packages -wholename '*/.coverage/lcov.info' | tr '\n' ',' | sed '$s/,$//')
           echo "COVFILES=$COVFILES" >> $GITHUB_ENV
       - name: Send Coverage to Codecov
-        uses: codecov/codecov-action@v2
+        uses: codecov/codecov-action@v4
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: ${{ env.COVFILES }}
           flags: unittests
           fail_ci_if_error: true
-          root_dir: ${{ github.workspace }}/frontend
+          root_dir: ${{ github.workspace }}
