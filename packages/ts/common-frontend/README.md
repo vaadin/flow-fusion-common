@@ -2,12 +2,12 @@
 
 [![Latest Stable Version](https://img.shields.io/npm/v/@vaadin/common-frontend.svg)](https://www.npmjs.com/package/@vaadin/common-frontend)
 
-A set of utilities used by Vaadin [Flow](https://vaadin.com/docs/latest/flow/overview) and [Fusion](https://vaadin.com/docs/latest/fusion/overview) frameworks.
+A set of utilities used by Vaadin [Flow](https://vaadin.com/docs/latest/flow/what-is-flow) and [Hilla](https://vaadin.com/docs/latest/hilla/faq) frameworks.
 
 ## Installation
 
 **NOTE**: This package is internal.
-If you want to use Flow or Fusion frameworks in your project, visit https://start.vaadin.com.
+If you want to use Flow or Hilla frameworks in your project, visit https://start.vaadin.com.
 
 ```bash
 $ npm install @vaadin/common-frontend

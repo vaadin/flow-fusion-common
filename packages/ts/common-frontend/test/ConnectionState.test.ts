@@ -1,7 +1,9 @@
-import type { describe, it } from 'mocha';
-import { assert, expect } from '@open-wc/testing';
 import sinon from 'sinon';
-import { ConnectionState, ConnectionStateStore, isLocalhost } from '../src';
+import sinonChai from 'sinon-chai';
+import { assert, expect, chai, describe, it } from 'vitest';
+import { ConnectionState, ConnectionStateStore, isLocalhost } from '../src/index.js';
+
+chai.use(sinonChai);
 
 describe('ConnectionStateStore', () => {
   it('should call state change listeners when transitioning between states', () => {
@@ -124,13 +126,12 @@ describe('ConnectionStateStore', () => {
     try {
       const postMessage = sinon.spy();
       const fakePromise = Promise.resolve({ active: { postMessage } });
-      Object.defineProperty(fakeServiceWorker, 'ready', { get: () => fakePromise });
+      Object.defineProperty(fakeServiceWorker, 'ready', { value: fakePromise });
 
       const store = new ConnectionStateStore(ConnectionState.CONNECTED);
-      const listener = (store as any).serviceWorkerMessageListener;
       // should add message event listener on service worker
       expect(addEventListener).to.be.calledOnce;
-      expect(addEventListener).to.be.calledWith('message', listener);
+      expect(addEventListener).to.be.calledWith('message', sinon.match.func);
 
       // should send {type: "isConnectionLost"} to service worker
       await fakePromise;
@@ -153,12 +154,12 @@ describe('ConnectionStateStore', () => {
 
       // should remove message event listener on service worker
       expect(removeEventListener).to.be.calledOnce;
-      expect(removeEventListener).to.be.calledWith('message', listener);
+      expect(removeEventListener).to.be.calledWith('message', sinon.match.func);
     } finally {
       navigatorStub.restore();
     }
   });
-  it('should know which hosts are localhost', async () => {
+  it('should know which hosts are localhost', () => {
     expect(isLocalhost('localhost')).to.be.true;
     expect(isLocalhost('127.0.0.1')).to.be.true;
     expect(isLocalhost('127.0.0.2')).to.be.true;
