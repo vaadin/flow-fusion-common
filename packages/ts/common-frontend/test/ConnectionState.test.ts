@@ -126,7 +126,7 @@ describe('ConnectionStateStore', () => {
     try {
       const postMessage = sinon.spy();
       const fakePromise = Promise.resolve({ active: { postMessage } });
-      Object.defineProperty(fakeServiceWorker, 'ready', { get: async () => await fakePromise });
+      Object.defineProperty(fakeServiceWorker, 'ready', { value: fakePromise });
 
       const store = new ConnectionStateStore(ConnectionState.CONNECTED);
       // should add message event listener on service worker
