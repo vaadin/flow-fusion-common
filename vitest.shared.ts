@@ -1,5 +1,5 @@
-// eslint-disable-next-line import/no-unassigned-import
-import 'vitest/node';
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference types="vitest/node" />
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { defineConfig } from 'vitest/config';
 
@@ -20,6 +20,7 @@ export default defineConfig({
   },
   test: {
     coverage: {
+      enabled: false,
       all: true,
       provider: 'v8',
       reportsDirectory: fileURLToPath(new URL('.coverage/', cwd)),

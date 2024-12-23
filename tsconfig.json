@@ -20,5 +20,5 @@
     "useDefineForClassFields": true,
     "useUnknownInCatchVariables": true
   },
-  "include": ["packages/ts", "scripts", "vitest.shared.ts"]
+  "include": ["scripts", "vitest.shared.ts", ".lintstagedrc.js", ]
 }

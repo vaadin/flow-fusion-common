@@ -1,11 +1,6 @@
 export * from './ConnectionState.js';
 export * from './ConnectionIndicator.js';
 
-const $wnd = window as any;
-$wnd.Vaadin ??= {};
-$wnd.Vaadin.registrations ??= [];
+// @ts-expect-error: esbuild injection
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call
-$wnd.Vaadin.registrations.push({
-  is: '@vaadin/common-frontend',
-  version: /* updated-by-script */ '0.0.19',
-});
+__REGISTER__();
