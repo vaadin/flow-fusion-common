@@ -14,6 +14,7 @@ on:
       - 'frontend/**/*'
       - '!frontend/.simple-git-hooks.json'
       - '!frontend/.lintstagedrc.js'
+  workflow_dispatch:
 
 jobs:
   testing:
