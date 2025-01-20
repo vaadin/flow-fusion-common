@@ -8,7 +8,7 @@ import { loadRegisterJs } from './plugins.js';
 
 const isCI = process.env.CI === 'true';
 
-const root = new URL('./', import.meta.url);
+const root = new URL('../../', import.meta.url);
 const cwd = pathToFileURL(`${process.cwd()}/`);
 
 const packageJson = await readFile(new URL('./package.json', cwd), 'utf8').then(
