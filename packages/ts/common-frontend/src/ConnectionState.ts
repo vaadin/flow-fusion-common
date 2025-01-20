@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 /*
  * Copyright 2000-2025 Vaadin Ltd.
  *
@@ -13,6 +14,12 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
+declare global {
+  interface Vaadin {
+    connectionState: ConnectionStateStore;
+  }
+}
 
 export enum ConnectionState {
   /**
@@ -151,18 +158,18 @@ export function isLocalhost(hostname: string): boolean {
   return /^127\.\d+\.\d+\.\d+$/u.test(hostname);
 }
 
-const $wnd = window as any;
-if (!$wnd.Vaadin?.connectionState) {
-  let online;
-  if (isLocalhost(window.location.hostname)) {
-    // We do not know if we are online or not as we cannot trust navigator.onLine which checks availability of a network connection. Better to assume online so localhost apps can work
-    online = true;
-  } else {
-    online = navigator.onLine;
-  }
-
-  $wnd.Vaadin ??= {};
-  $wnd.Vaadin.connectionState = new ConnectionStateStore(
-    online ? ConnectionState.CONNECTED : ConnectionState.CONNECTION_LOST,
-  );
+let online;
+if (isLocalhost(window.location.hostname)) {
+  // We do not know if we are online or not as we cannot trust navigator.onLine which checks availability of a network connection. Better to assume online so localhost apps can work
+  online = true;
+} else {
+  online = navigator.onLine;
 }
+
+export const connectionState = new ConnectionStateStore(
+  online ? ConnectionState.CONNECTED : ConnectionState.CONNECTION_LOST,
+);
+
+export default {
+  connectionState,
+};

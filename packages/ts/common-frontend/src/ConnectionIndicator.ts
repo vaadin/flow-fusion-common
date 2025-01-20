@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-use-before-define */
 /*
  * Copyright 2000-2025 Vaadin Ltd.
  *
@@ -13,11 +14,10 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 import { html, LitElement } from 'lit';
 import { property, state } from 'lit/decorators.js';
 import { classMap } from 'lit/directives/class-map.js';
-import { ConnectionState, type ConnectionStateStore } from './ConnectionState.js';
+import { ConnectionState } from './ConnectionState.js';
 
 const DEFAULT_STYLE_ID = 'css-loading-indicator';
 
@@ -32,10 +32,16 @@ export const enum LoadingBarState {
 }
 
 declare global {
+  interface Vaadin {
+    connectionIndicator: ConnectionIndicator;
+  }
+
   interface HTMLElementTagNameMap {
     'vaadin-connection-indicator': ConnectionIndicator;
   }
 }
+
+const { connectionState } = window.Vaadin;
 
 /**
  * Component showing loading and connection indicator. When added to DOM,
@@ -43,7 +49,7 @@ declare global {
  */
 export class ConnectionIndicator extends LitElement {
   static get instance(): ConnectionIndicator {
-    return ConnectionIndicator.create();
+    return connectionIndicator;
   }
 
   /**
@@ -51,13 +57,7 @@ export class ConnectionIndicator extends LitElement {
    * window.Vaadin.connectionIndicator and add instance to the document body.
    */
   static create(): ConnectionIndicator {
-    const $wnd = window as any;
-    if (!$wnd.Vaadin?.connectionIndicator) {
-      $wnd.Vaadin ??= {};
-      $wnd.Vaadin.connectionIndicator = document.createElement('vaadin-connection-indicator');
-      document.body.appendChild($wnd.Vaadin.connectionIndicator);
-    }
-    return $wnd.Vaadin?.connectionIndicator as ConnectionIndicator;
+    return connectionIndicator;
   }
 
   /**
@@ -128,8 +128,6 @@ export class ConnectionIndicator extends LitElement {
 
   #expandedTimeout = 0;
 
-  #connectionStateStore?: ConnectionStateStore;
-
   readonly connectionStateListener: () => void;
 
   #lastMessageState: ConnectionState = ConnectionState.CONNECTED;
@@ -166,23 +164,15 @@ export class ConnectionIndicator extends LitElement {
 
   override connectedCallback() {
     super.connectedCallback();
-
-    const $wnd = window as any;
-    if ($wnd.Vaadin?.connectionState) {
-      this.#connectionStateStore = $wnd.Vaadin.connectionState as ConnectionStateStore;
-      this.#connectionStateStore.addStateChangeListener(this.connectionStateListener);
-      this.#updateConnectionState();
-    }
-
+    connectionState.addStateChangeListener(this.connectionStateListener);
+    this.#updateConnectionState();
     this.#updateTheme();
   }
 
   override disconnectedCallback() {
     super.disconnectedCallback();
 
-    if (this.#connectionStateStore) {
-      this.#connectionStateStore.removeStateChangeListener(this.connectionStateListener);
-    }
+    connectionState.removeStateChangeListener(this.connectionStateListener);
 
     this.#updateTheme();
   }
@@ -210,17 +200,17 @@ export class ConnectionIndicator extends LitElement {
    * message should be shown
    */
   #updateConnectionState(): boolean {
-    const connectionState = this.#connectionStateStore?.state;
-    this.offline = connectionState === ConnectionState.CONNECTION_LOST;
-    this.reconnecting = connectionState === ConnectionState.RECONNECTING;
-    this.#updateLoading(connectionState === ConnectionState.LOADING);
+    const { state: _state } = connectionState;
+    this.offline = _state === ConnectionState.CONNECTION_LOST;
+    this.reconnecting = _state === ConnectionState.RECONNECTING;
+    this.#updateLoading(_state === ConnectionState.LOADING);
     if (this.loading) {
       // Entering loading state, do not show message
       return false;
     }
 
-    if (connectionState !== this.#lastMessageState) {
-      this.#lastMessageState = connectionState!;
+    if (_state !== this.#lastMessageState) {
+      this.#lastMessageState = _state!;
       // Message changes, show new message
       return true;
     }
@@ -485,4 +475,9 @@ if (customElements.get('vaadin-connection-indicator') === undefined) {
  * To avoid altering the appearance while the indicator is active, apply the
  * configuration in your application 'frontend/index.ts' file.
  */
-export const connectionIndicator = ConnectionIndicator.instance;
+export const connectionIndicator = new ConnectionIndicator();
+document.body.appendChild(connectionIndicator);
+
+export default {
+  connectionIndicator,
+} satisfies Pick<Vaadin, 'connectionIndicator'>;
