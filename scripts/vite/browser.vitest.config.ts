@@ -4,7 +4,7 @@ import { readFile } from 'node:fs/promises';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import type { PackageJson } from 'type-fest';
 import { defineConfig } from 'vitest/config';
-import { loadRegisterJs } from './scripts/vite/plugins.js';
+import { loadRegisterJs } from './plugins.js';
 
 const isCI = process.env.CI === 'true';
 

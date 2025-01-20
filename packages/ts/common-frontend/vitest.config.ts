@@ -1,3 +1,3 @@
-import sharedConfig from '../../../vitest.shared.js';
+import sharedConfig from '../../../scripts/vite/browser.vitest.config.js';
 
 export default sharedConfig;

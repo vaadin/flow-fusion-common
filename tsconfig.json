@@ -6,7 +6,7 @@
     "target": "esnext",
     "module": "esnext",
     "moduleResolution": "bundler",
-    "lib": ["es2021", "dom"],
+    "lib": ["es2021", "dom", "dom.iterable"],
     "types": ["@vitest/browser/providers/playwright"],
     "allowArbitraryExtensions": true,
     "skipLibCheck": true,
@@ -20,5 +20,5 @@
     "useDefineForClassFields": true,
     "useUnknownInCatchVariables": true
   },
-  "include": ["scripts", "vitest.shared.ts", ".lintstagedrc.js", ]
+  "include": ["scripts", ".lintstagedrc.js" ]
 }
