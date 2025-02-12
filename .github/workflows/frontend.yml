@@ -19,7 +19,7 @@ on:
 jobs:
   testing:
     name: Test & Analysis
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     timeout-minutes: 5
     env:
       NX_SKIP_NX_CACHE: true
